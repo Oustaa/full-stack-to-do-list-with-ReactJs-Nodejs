@@ -1,0 +1,25 @@
+{
+  "name": "fullstack-to-do-list",
+  "version": "1.0.0",
+  "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
+  "main": "index.js",
+  "scripts": {
+    "testClient": "npm test --prefix client",
+    "testServer": "npm test --prefix server",
+    "start": "npm start --prefix server & npm start --prefix client",
+    "startClient": "npm start --prefix client",
+    "startServer": "npm start --prefix server",
+    "deploy":"npm run build --prefix client && npm run startServer"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Oustaa/full-stack-to-do-list-with-ReactJs-Nodejs.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Oustaa/full-stack-to-do-list-with-ReactJs-Nodejs/issues"
+  },
+  "homepage": "https://github.com/Oustaa/full-stack-to-do-list-with-ReactJs-Nodejs#readme"
+}
