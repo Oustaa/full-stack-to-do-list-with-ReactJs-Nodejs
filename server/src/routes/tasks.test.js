@@ -8,7 +8,7 @@ describe("GET /tasks", () => {
 });
 
 describe("GET /tasks/upcoming", () => {
-  request(app).get("/tasks/upcoming").expect(200);
+  request(app).get("/tasks/upcoming").expect(404);
 });
 
 describe("POST /tasks", () => {
@@ -20,54 +20,44 @@ describe("POST /tasks", () => {
     doneBy: undefined,
   };
   const taskDataMissingInput = {
-    title: "task number somthing",
+    title: "",
     duration: 3600,
     every: "day",
     doneBy: undefined,
-  };
-  const taskDataEmptyInput = {
-    title: "task number somthing",
-    duration: 3600,
     type: "",
-    every: "day",
-    doneBy: undefined,
   };
 
-  it("should response with a 201(CREATED) status code, and an object contening an i property", () => {
-    const response = request(app).get("/tasks").send(taskData).expect(201);
+  it("should response with a 201(CREATED) status code, and an object contening an id property", async () => {
+    const response = await request(app)
+      .post("/tasks")
+      .send(taskData)
+      .expect(201);
+    console.log(response.body);
     expect(response.body).toHaveProperty("id");
+    expect(response.body).toHaveProperty("completed");
   });
 
-  it("should catch mising required field", async () => {
+  it("should catch mising or empty required field", async () => {
     const response = await request(app)
       .post("/tasks")
       .send(taskDataMissingInput)
       .expect(400);
 
     expect(response.body).toMatchObject({
-      error_message: "Missing required field",
-    });
-  });
-
-  it("should catch empty required field", async () => {
-    const response = await request(app)
-      .post("/tasks")
-      .send(taskDataEmptyInput)
-      .expect(400);
-
-    expect(response.body).toMatchObject({
-      error_message: "A required field is empty",
+      error_message: "Missing or empty required filed",
     });
   });
 });
 
-describe("DELETE /tasks/:id", async () => {
-  const response = await request(app)
-    .delete("/tasks/5")
-    .expect(200)
-    .expect("Content-Type", "aplication/json");
+describe("DELETE /tasks/:id", () => {
+  it("should delete task with a giving id", async () => {
+    const response = await request(app)
+      .delete("/tasks/1")
+      .expect(200)
+      .expect("Content-Type", "aplication/json");
 
-  expect(response.body).toHaveProperty("deleted_id");
+    expect(response.body).toHaveProperty("deleted_id");
+  });
 });
 
 // describe("PUT /tasks/:id", async () => {

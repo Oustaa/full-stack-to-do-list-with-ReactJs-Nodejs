@@ -1,0 +1,3 @@
+id,title,type,every,duration,doneBy,completed
+0,learn Git and GitHub it'll help a lot,undefined,undefined,undefined,NaN,undefined
+1,Complete fullstack project,doneBy,,,NaN,false
