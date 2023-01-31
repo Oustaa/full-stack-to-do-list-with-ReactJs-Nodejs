@@ -1,3 +1,12 @@
 id,title,type,every,duration,doneBy,completed
-0,learn Git and GitHub it'll help a lot,undefined,undefined,undefined,NaN,undefined
-1,Complete fullstack project,doneBy,,,NaN,false
+0,be good developer,doneBy,,3600,NaN,false
+1,be good developer,doneBy,,3600,NaN,false
+2,Complete fullstack project,doneBy,undefined,undefined,1682892000000,false
+3,be good developer,every,day,3600,NaN,false
+4,task number somthing,every,day,3600,NaN,false
+5,task number somthing,every,day,3600,NaN,false
+6,task number somthing,every,day,3600,NaN,false
+7,task number somthing,every,day,3600,NaN,false
+8,task number somthing,every,day,3600,NaN,false
+9,task number somthing,every,day,3600,NaN,false
+10,task number somthing,every,day,3600,NaN,false

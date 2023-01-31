@@ -14,6 +14,7 @@ function dataToString({ id, title, type, every, duration, doneBy, completed }) {
 }
 
 function updateCsvFile(data) {
+  console.log(data.length);
   let fileContent = data.reduce(
     (prev, next) => prev + dataToString(next),
     FILE_HEADERS
@@ -41,9 +42,9 @@ function getTasks() {
 
 async function postTask(task) {
   //   get real time tasks
-  await getTasks();
+  const tasks = await getTasks();
 
-  const id = Math.max(...tasks.map((task) => task.id)) + 1;
+  const id = tasks.length && Math.max(...tasks.map((task) => task.id)) + 1;
   //   add new task
   await fs.appendFile(
     FILE_PATH,
@@ -74,4 +75,34 @@ async function deleteTask(id) {
   updateCsvFile(updatedTasks);
 }
 
-module.exports = { tasks, getTasks, postTask, putTask, deleteTask };
+async function getUpComing() {
+  const upComingTasks = [];
+  return new Promise((resolve, reject) => {
+    fs.createReadStream(FILE_PATH)
+      .pipe(parse({ columns: true }))
+      .on("data", (data) => {
+        if (
+          data.type === "doneBy" &&
+          new Date(+data.doneBy).valueOf() > new Date().valueOf()
+        ) {
+          console.log("Found match");
+          upComingTasks.push(data);
+        }
+      })
+      .on("error", (err) => {
+        reject(err);
+      })
+      .on("end", () => {
+        resolve(upComingTasks);
+      });
+  });
+}
+
+module.exports = {
+  tasks,
+  getTasks,
+  postTask,
+  putTask,
+  deleteTask,
+  getUpComing,
+};

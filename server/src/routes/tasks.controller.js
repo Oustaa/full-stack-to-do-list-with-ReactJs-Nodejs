@@ -4,6 +4,7 @@ const {
   postTask,
   putTask,
   deleteTask,
+  getUpComing,
 } = require("../models/tasks.model");
 
 async function httpGetTasks(req, res) {
@@ -22,7 +23,8 @@ async function httpPostTask(req, res) {
     !task.title ||
     !task.type ||
     (task.type === "every" && !task.every) ||
-    (task.every === "day" && !task.duration)
+    (task.every === "day" && !task.duration) ||
+    (task.type === "doneBy" && !task.doneBy)
   )
     return res.status(400).json({
       error_message: "Missing or empty required filed",
@@ -45,7 +47,13 @@ async function httpPutTask(req, res) {
 async function httpDeleteTask(req, res) {
   const taskId = +req.params.id;
   deleteTask(taskId);
-  res.status(200).json({ deletd_id: taskId });
+  res.status(200).json({ deleted_id: taskId });
+}
+
+async function httpGetUpComing(req, res) {
+  const upComingTasks = await getUpComing();
+
+  res.status(200).json(upComingTasks);
 }
 
 module.exports = {
@@ -53,4 +61,5 @@ module.exports = {
   httpPostTask,
   httpPutTask,
   httpDeleteTask,
+  httpGetUpComing,
 };

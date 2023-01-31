@@ -7,8 +7,10 @@ describe("GET /tasks", () => {
   });
 });
 
-describe("GET /tasks/upcoming", () => {
-  request(app).get("/tasks/upcoming").expect(404);
+describe("GET /tasks/upComing", () => {
+  it("should response with a 200 status code", async () => {
+    const response = await request(app).get("/tasks/upComing").expect(200);
+  });
 });
 
 describe("POST /tasks", () => {
@@ -52,19 +54,28 @@ describe("POST /tasks", () => {
 describe("DELETE /tasks/:id", () => {
   it("should delete task with a giving id", async () => {
     const response = await request(app)
-      .delete("/tasks/1")
+      .delete("/tasks/3")
       .expect(200)
-      .expect("Content-Type", "aplication/json");
+      .expect("Content-Type", "application/json; charset=utf-8");
 
     expect(response.body).toHaveProperty("deleted_id");
   });
 });
 
-// describe("PUT /tasks/:id", async () => {
-//   const response = await request(app)
-//     .put("/tasks/5")
-//     .expect(200)
-//     .expect("Content-Type", "aplication/json");
+describe("PUT /tasks", () => {
+  it("should return the updated object", async () => {
+    const taskData = {
+      id: "2",
+      title: "Complete fullstack project",
+      type: "doneBy",
+      doneBy: "2023 5, 01",
+      completed: "false",
+    };
+    const response = await request(app)
+      .put("/tasks")
+      .send(taskData)
+      .expect(200);
 
-//   expect(response.body).toHaveProperty("deleted_id");
-// });
+    expect(response.body).toStrictEqual(taskData);
+  });
+});
