@@ -2,77 +2,30 @@ const fs = require("fs");
 const { join } = require("path");
 const { parse } = require("csv-parse");
 
+const taskModel = require("./tasks.mongo");
+
 const FILE_PATH = join(__dirname, "..", "data", "tasks.csv");
-const FILE_HEADERS = "id,title,type,every,duration,doneBy,completed\n";
 
-const tasks = [];
-
-function dataToString({ id, title, type, every, duration, doneBy, completed }) {
-  return `${id},${title},${type},${every},${duration},${new Date(
-    doneBy
-  ).valueOf()},${completed}\n`;
-}
-
-function updateCsvFile(data) {
-  console.log(data.length);
-  let fileContent = data.reduce(
-    (prev, next) => prev + dataToString(next),
-    FILE_HEADERS
-  );
-
-  fs.appendFile(FILE_PATH, fileContent, { flag: "w" }, () => {});
-}
-
-function getTasks() {
-  tasks.length = 0;
-  return new Promise((resolve, reject) => {
-    fs.createReadStream(FILE_PATH)
-      .pipe(parse({ columns: true }))
-      .on("data", (data) => {
-        tasks.push({ ...data, id: +data.id });
-      })
-      .on("error", (err) => {
-        reject(err);
-      })
-      .on("end", () => {
-        resolve(tasks);
-      });
-  });
+async function getTasks({ skip, limit }) {
+  return await taskModel
+    .find({}, { __v: 0 })
+    .skip(skip)
+    .limit(limit)
+    .sort({ _id: 1 });
 }
 
 async function postTask(task) {
-  //   get real time tasks
-  const tasks = await getTasks();
-
-  const id = tasks.length && Math.max(...tasks.map((task) => task.id)) + 1;
-  //   add new task
-  await fs.appendFile(
-    FILE_PATH,
-    dataToString(Object.assign(task, { id, completed: false })),
-    { flag: "a" },
-    () => {}
-  );
-
-  return await task;
+  return taskModel.updateOne(task, task, { upsert: true });
 }
 
 async function putTask(updatedTask) {
-  await getTasks();
-
-  const updatedTasks = await tasks.map((task) => {
-    if (Number(updatedTask?.id) === Number(task.id)) return updatedTask;
-    return task;
-  });
-
-  await updateCsvFile(updatedTasks);
-
-  return await updatedTasks.find((task) => +task.id === +updatedTask.id);
+  return await taskModel.updateOne({ _id: updatedTask._id }, updatedTask);
 }
 
 async function deleteTask(id) {
-  await getTasks();
-  const updatedTasks = await tasks.filter((task) => +task.id !== id);
-  updateCsvFile(updatedTasks);
+  /* ---------------- Delete Permanently ---------------- */
+  // return await taskModel.deleteOne({ _id: id });
+  return await taskModel.updateOne({ _id: id }, { deleted: true });
 }
 
 async function getUpComing() {
@@ -99,7 +52,6 @@ async function getUpComing() {
 }
 
 module.exports = {
-  tasks,
   getTasks,
   postTask,
   putTask,
