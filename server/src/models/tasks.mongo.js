@@ -3,6 +3,7 @@ const { Schema, model } = require("mongoose");
 const tasksSchema = new Schema({
   title: { type: String, required: true },
   type: { type: String, required: true },
+  userId: { type: String, required: true },
   duration: { type: Number, default: null },
   doneBy: { type: Date, default: null },
   every: { type: String, default: null },

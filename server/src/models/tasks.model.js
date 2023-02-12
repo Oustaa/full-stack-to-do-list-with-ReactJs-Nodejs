@@ -6,15 +6,16 @@ const taskModel = require("./tasks.mongo");
 
 const FILE_PATH = join(__dirname, "..", "data", "tasks.csv");
 
-async function getTasks({ skip, limit }) {
+async function getTasks({ skip, limit }, userId) {
   return await taskModel
-    .find({}, { __v: 0 })
+    .find({ userId: userId }, { __v: 0 })
     .skip(skip)
     .limit(limit)
     .sort({ _id: 1 });
 }
 
-async function postTask(task) {
+async function postTask(task, userId) {
+  Object.assign(task, { userId: userId });
   return taskModel.updateOne(task, task, { upsert: true });
 }
 

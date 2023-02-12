@@ -21,17 +21,5 @@
   "bugs": {
     "url": "https://github.com/Oustaa/full-stack-to-do-list-with-ReactJs-Nodejs/issues"
   },
-  "homepage": "https://github.com/Oustaa/full-stack-to-do-list-with-ReactJs-Nodejs#readme",
-  "dependencies": {
-    "cookie-session": "^2.0.0",
-    "helmet": "^6.0.1",
-    "passport": "^0.6.0",
-    "passport-google-oauth20": "^2.0.0",
-    "styled-components": "^5.3.6"
-  },
-  "devDependencies": {
-    "enzyme": "^3.11.0",
-    "enzyme-adapter-react-16": "^1.15.7",
-    "enzyme-to-json": "^3.6.2"
-  }
+  "homepage": "https://github.com/Oustaa/full-stack-to-do-list-with-ReactJs-Nodejs#readme"
 }

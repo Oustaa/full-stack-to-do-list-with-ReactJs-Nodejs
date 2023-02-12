@@ -12,7 +12,7 @@ async function httpGetTasks(req, res) {
   const queryParam = await getQueryParam(req.query);
 
   try {
-    return await res.status(201).json(await getTasks(queryParam));
+    return await res.status(201).json(await getTasks(queryParam, req.user));
   } catch (error) {
     return res.status(400).json({ error_message: error.message });
   }
